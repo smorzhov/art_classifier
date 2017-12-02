@@ -8,13 +8,13 @@ You will need the following things properly installed on your computer.
 
 ## Installation
 
-* `git clone https://github.com/smorzhov/art_classifier.git` this repository
+* `git clone https://github.com/smorzhov/art_classifier.git`
 * `cd art_classifier`
 * `pip install -r requirements.txt`
 
 ## Running
 
-1. First of all, you need data to train. You can download it [https://drive.google.com/file/d/1uSz9xfYQD3VSN17wlxdGZ6yDpO5uWz6A/view?usp=sharing](here)
+1. First of all, you need data to train. You can download it [here](https://drive.google.com/file/d/1uSz9xfYQD3VSN17wlxdGZ6yDpO5uWz6A/view?usp=sharing)
 2. At the top of the art_classifier folder unrar archive with train and test data.
 
     `unrar x data.rar` or `unp data.rar`
