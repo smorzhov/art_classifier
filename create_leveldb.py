@@ -2,7 +2,7 @@
 This script divides the training images into 2 sets and
 stores them in lmdb databases for training and validation.
 
-Usage: python create_lmdb.py
+Usage: python create_leveldb.py
 """
 
 from random import shuffle
@@ -38,9 +38,9 @@ def main():
     logger.info('Greetings from ' + path.basename(__file__))
 
     validation_ratio = 6
-    leveldb_data_path = path.join(CWD, 'leveldb_data')
-    train_db_path = path.join(leveldb_data_path, 'train')
-    validation_db_path = path.join(leveldb_data_path, 'validation')
+    leveldb_data_path = path.join(CWD, 'input')
+    train_db_path = path.join(leveldb_data_path, 'train_leveldb')
+    validation_db_path = path.join(leveldb_data_path, 'validation_leveldb')
 
     try_makedirs(leveldb_data_path)
 
