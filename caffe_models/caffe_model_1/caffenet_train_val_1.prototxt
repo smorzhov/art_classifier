@@ -9,7 +9,7 @@ layer {
   }
   transform_param {
     mirror: true
-    crop_size: 227
+    crop_size: 256
     mean_file: "/home/ivanovskii/workspace/art_classifier/input/mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
@@ -22,8 +22,8 @@ layer {
 #  }
   data_param {
     source: "/home/ivanovskii/workspace/art_classifier/input/train_leveldb"
-    batch_size: 256
-    backend: LMDB
+    batch_size: 16
+    backend: LEVELDB
   }
 }
 layer {
@@ -36,7 +36,7 @@ layer {
   }
   transform_param {
     mirror: false
-    crop_size: 227
+    crop_size: 256
     mean_file: "/home/ivanovskii/workspace/art_classifier/input/mean.binaryproto"
   }
 # mean pixel / channel-wise mean instead of mean image
@@ -49,8 +49,8 @@ layer {
 #  }
   data_param {
     source: "/home/ivanovskii/workspace/art_classifier/input/validation_leveldb"
-    batch_size: 50
-    backend: LMDB
+    batch_size: 15
+    backend: LEVELDB
   }
 }
 layer {
@@ -370,7 +370,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 2
+    num_output: 42
     weight_filler {
       type: "gaussian"
       std: 0.01

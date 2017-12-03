@@ -28,7 +28,7 @@ def make_datum(image, label):
         width=IMAGE_WIDTH,
         height=IMAGE_HEIGHT,
         label=label,
-        data=np.rollaxis(image, 2).tostring())
+        data=np.rollaxis(np.array(image), 2).tostring())
 
 
 def main():
@@ -67,6 +67,7 @@ def main():
     null_label = 0
     for in_idx, img_path in enumerate(train_images):
         img = transform_img(Image.open(img_path))
+        print(img_path)
         genre = train_data_info[train_data_info['new_filename'] == '0.jpg'][
             'genre'].dropna()
         if len(genre) < 1:
