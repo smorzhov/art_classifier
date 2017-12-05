@@ -26,35 +26,35 @@ You will need the following things properly installed on your computer.
     ```
 3. Building docker image
     ```bash
-    docker-compose up -d
+    docker-compose up
     ```
 4. Create leveldb data
     ```bash
-    docker run -ti caffe:cpu bash -c "python create_leveldb.py"
+    docker exec artclassifier_caffe-cpu_1 bash -c "python create_leveldb.py"
     ```
 4. Generate the mean image of training data
     ```bash
-    docker run -ti caffe:cpu bash -c "compute_image_mean -backend=leveldb ./input/train_leveldb ./input/mean.binaryproto"
+    docker exec artclassifier_caffe-cpu_1 "compute_image_mean -backend=leveldb ./input/train_leveldb ./input/mean.binaryproto"
     ```
 5. Model training
     ```bash
-    docker run -ti caffe:cpu bash -c "docker run -ti caffe:cpu bash -c "caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee caffe_models/caffe_model_1/model_1_train.log"
+    docker exec artclassifier_caffe-cpu_1 "caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee caffe_models/caffe_model_1/model_1_train.log"
     ```
 6. Plotting the learning 
     ```bash
-    docker run -ti caffe:cpu bash -c "python plot_learning_curve.py caffe_models/caffe_model_1/model_1_train.log caffe_models/caffe_model_1/caffe_model_1_learning_curve.png"
+    docker exec artclassifier_caffe-cpu_1 "python plot_learning_curve.py caffe_models/caffe_model_1/model_1_train.log caffe_models/caffe_model_1/caffe_model_1_learning_curve.png"
     ```
 7. Prediction on new data
     ```bash
-    docker run -ti caffe:cpu bash -c "python make_predictions.py"
+    docker exec artclassifier_caffe-cpu_1 "python make_predictions.py"
     ```
     For more details how to use this script you can run
     ```bash
-    docker run -ti caffe:cpu bash -c "python make_predictions.py -h"
+    docker exec artclassifier_caffe-cpu_1 "python make_predictions.py -h"
     ```
 
 Optionally you can print the model architecture by executing the command below. The model architecture image will be stored under `~/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png` 
 
 ```bash
-docker run -ti caffe:cpu bash -c "python draw_net.py caffe_models/caffe_model_1/caffenet_train_val_1.prototxt caffe_models/caffe_model_1/caffe_model_1.png"
+docker exec artclassifier_caffe-cpu_1 "python draw_net.py caffe_models/caffe_model_1/caffenet_train_val_1.prototxt caffe_models/caffe_model_1/caffe_model_1.png"
 ``` 

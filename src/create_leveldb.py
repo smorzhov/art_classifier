@@ -6,7 +6,8 @@ Usage: python create_leveldb.py
 """
 
 from random import shuffle
-from os import path, remove
+from os import path
+from shutil import rmtree
 from glob import glob
 
 import pandas as pd
@@ -46,10 +47,10 @@ def main():
 
     if path.exists(train_db_path):
         logger.info('Removing ' + train_db_path)
-        remove(train_db_path)
+        rmtree(train_db_path)
     if path.exists(validation_db_path):
         logger.info('Removing ' + validation_db_path)
-        remove(validation_db_path)
+        rmtree(validation_db_path)
 
     train_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
     # Creating label, genre data frame
@@ -69,10 +70,10 @@ def main():
     bar.start()
     for in_idx, img_path in enumerate(train_images):
         img = transform_img(Image.open(img_path))
-        # print(img_path)
+        # print(path.basename(img_path))
         bar.update(in_idx + 1)
-        genre = train_data_info[train_data_info['new_filename'] == '0.jpg'][
-            'genre'].dropna()
+        genre = train_data_info[train_data_info['new_filename'] ==
+                                path.basename(img_path)]['genre'].dropna()
         if len(genre) < 1:
             null_genre += 1
             continue
