@@ -8,12 +8,4 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt && \
     rm requirements.txt
 
-# create a folder called art_classifier
-# and copy some files (folders) into that folder
-ADD . /art_classifier
-
 WORKDIR /art_classifier
-
-# Create volumes
-VOLUME ["/caffe_models", "/data", "create_leveldb.py",
-    "make_predictions.py", "plot_learning_curve.py", "utils.py"]

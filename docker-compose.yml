@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  caffe-cpu:
+    build: ./src
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./src:/art_classifier
+    command: 'bash'

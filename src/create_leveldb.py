@@ -14,8 +14,8 @@ import numpy as np
 import leveldb
 from PIL import Image
 from caffe.proto import caffe_pb2
-from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, get_logger
-from utils import DATA_PATH, transform_img, try_makedirs
+from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
+from utils import get_logger, transform_img, try_makedirs, get_progress_bar
 
 
 def make_datum(image, label):
@@ -65,9 +65,12 @@ def main():
     shuffle(train_images)
     null_genre = 0
     null_label = 0
+    bar = get_progress_bar(len(train_images))
+    bar.start()
     for in_idx, img_path in enumerate(train_images):
         img = transform_img(Image.open(img_path))
-        print(img_path)
+        # print(img_path)
+        bar.update(in_idx + 1)
         genre = train_data_info[train_data_info['new_filename'] == '0.jpg'][
             'genre'].dropna()
         if len(genre) < 1:
@@ -85,6 +88,7 @@ def main():
             validation_db.Put('{:0>5d}'.format(in_idx),
                               datum.SerializeToString())
         logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
+    bar.finish()
 
     logger.info('Genre is null: ' + str(null_genre))
     logger.info('Lable is null: ' + str(null_label))
