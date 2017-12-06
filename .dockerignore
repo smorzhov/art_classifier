@@ -1,0 +1,8 @@
+*.md
+*.gitignore
+*.vscode
+
+*src/data
+*src/input
+*src/log
+*src/caffe_models
