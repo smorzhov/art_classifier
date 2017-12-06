@@ -12,6 +12,7 @@ import matplotlib
 import matplotlib.pylab as plt
 from utils import CAFFE_PATH
 
+
 def generate_logs(model_log_path, must_clear=True):
     """
     Returns training and test logs

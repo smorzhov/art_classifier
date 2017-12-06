@@ -14,7 +14,7 @@ from PIL import Image
 import caffe
 from caffe.proto import caffe_pb2
 from create_leveldb import transform_img
-from utils import CWD, DATA_PATH, get_logger
+from utils import CWD, DATA_PATH, get_logger, MODE
 
 
 def get_model_data(mean_file, model_arc, model_weights):
@@ -109,7 +109,10 @@ def init_argparse():
 
 def main():
     """Main function"""
-    caffe.set_mode_gpu()
+    if MODE == 'gpu':
+        caffe.set_mode_gpu()
+    else:
+        caffe.set_mode_cpu()
     parser = init_argparse()
     args = parser.parse_args()
 

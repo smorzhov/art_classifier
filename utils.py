@@ -3,14 +3,24 @@ Some useful utilities
 """
 import logging
 from os import path, makedirs
+import progressbar
 from PIL import Image
 
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
 
+MODE = 'cpu'
+
 CWD = path.dirname(path.realpath(__file__))
 CAFFE_PATH = '/home/ubuntu/caffe/'
 DATA_PATH = path.join(CWD, 'data')
+
+
+def get_progress_bar(maxvalue):
+    return progressbar.ProgressBar(
+        maxval=maxvalue,
+        widgets=[progressbar.Bar('=', '[', ']'), ' ',
+                 progressbar.Percentage()])
 
 
 def get_logger(file):

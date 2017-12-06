@@ -6,7 +6,8 @@ Usage: python create_leveldb.py
 """
 
 from random import shuffle
-from os import path, remove
+from os import path
+from shutil import rmtree
 from glob import glob
 
 import pandas as pd
@@ -14,8 +15,8 @@ import numpy as np
 import leveldb
 from PIL import Image
 from caffe.proto import caffe_pb2
-from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, get_logger
-from utils import DATA_PATH, transform_img, try_makedirs
+from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
+from utils import get_logger, transform_img, try_makedirs, get_progress_bar
 
 
 def make_datum(image, label):
@@ -46,10 +47,10 @@ def main():
 
     if path.exists(train_db_path):
         logger.info('Removing ' + train_db_path)
-        remove(train_db_path)
+        rmtree(train_db_path)
     if path.exists(validation_db_path):
         logger.info('Removing ' + validation_db_path)
-        remove(validation_db_path)
+        rmtree(validation_db_path)
 
     train_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
     # Creating label, genre data frame
@@ -65,11 +66,14 @@ def main():
     shuffle(train_images)
     null_genre = 0
     null_label = 0
+    bar = get_progress_bar(len(train_images))
+    bar.start()
     for in_idx, img_path in enumerate(train_images):
         img = transform_img(Image.open(img_path))
-        print(img_path)
-        genre = train_data_info[train_data_info['new_filename'] == '0.jpg'][
-            'genre'].dropna()
+        # print(path.basename(img_path))
+        bar.update(in_idx + 1)
+        genre = train_data_info[train_data_info['new_filename'] ==
+                                path.basename(img_path)]['genre'].dropna()
         if len(genre) < 1:
             null_genre += 1
             continue
@@ -79,12 +83,13 @@ def main():
             logger.critical(str(genre.values[0]) + ' has no label!')
             continue
         datum = make_datum(img, int(label.values[0]))
-        if in_idx % validation_ratio == 0:
+        if in_idx % validation_ratio != 0:
             train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
         else:
             validation_db.Put('{:0>5d}'.format(in_idx),
                               datum.SerializeToString())
         logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
+    bar.finish()
 
     logger.info('Genre is null: ' + str(null_genre))
     logger.info('Lable is null: ' + str(null_label))
