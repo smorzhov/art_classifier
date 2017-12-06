@@ -9,7 +9,7 @@ from PIL import Image
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
 
-MODE = 'cpu'
+MODE = 'gpu'
 
 CWD = path.dirname(path.realpath(__file__))
 CAFFE_PATH = '/home/ubuntu/caffe/'
