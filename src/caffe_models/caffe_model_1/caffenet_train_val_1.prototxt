@@ -10,19 +10,11 @@ layer {
   transform_param {
     mirror: true
     crop_size: 256
-    mean_file: "input/mean.binaryproto"
+    mean_file: "/art_classifier/input/mean.binaryproto"
   }
-# mean pixel / channel-wise mean instead of mean image
-#  transform_param {
-#    crop_size: 227
-#    mean_value: 104
-#    mean_value: 117
-#    mean_value: 123
-#    mirror: true
-#  }
   data_param {
-    source: "input/train_leveldb"
-    batch_size: 16
+    source: "/art_classifier/input/train_leveldb"
+    batch_size: 256
     backend: LEVELDB
   }
 }
@@ -37,19 +29,11 @@ layer {
   transform_param {
     mirror: false
     crop_size: 256
-    mean_file: "input/mean.binaryproto"
+    mean_file: "/art_classifier/input/mean.binaryproto"
   }
-# mean pixel / channel-wise mean instead of mean image
-#  transform_param {
-#    crop_size: 227
-#    mean_value: 104
-#    mean_value: 117
-#    mean_value: 123
-#    mirror: true
-#  }
   data_param {
-    source: "input/validation_leveldb"
-    batch_size: 15
+    source: "/art_classifier/input/validation_leveldb"
+    batch_size: 50
     backend: LEVELDB
   }
 }

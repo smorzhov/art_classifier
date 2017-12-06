@@ -3,6 +3,7 @@
         "**/.git": true,
         "**/.svn": true,
         "**/.hg": true,
+        "**/*.png": true,
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/src/data": true

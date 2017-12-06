@@ -1,9 +1,9 @@
-name: "CaffeNet"
+ame: "CaffeNet"
 layer {
   name: "data"
   type: "Input"
   top: "data"
-  input_param { shape: { dim: 1 dim: 3 dim: 227 dim: 227 } }
+  input_param { shape: { dim: 1 dim: 3 dim: 256 dim: 256 } }
 }
 layer {
   name: "conv1"
@@ -202,7 +202,7 @@ layer {
   bottom: "fc7"
   top: "fc8"
   inner_product_param {
-    num_output: 2
+    num_output: 42
   }
 }
 layer {
