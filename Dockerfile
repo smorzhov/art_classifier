@@ -9,3 +9,5 @@ RUN pip install -r requirements.txt && \
     rm requirements.txt
 
 WORKDIR /art_classifier
+
+VOLUME ["/art_classifier"]
