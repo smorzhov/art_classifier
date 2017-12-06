@@ -83,7 +83,7 @@ def main():
             logger.critical(str(genre.values[0]) + ' has no label!')
             continue
         datum = make_datum(img, int(label.values[0]))
-        if in_idx % validation_ratio == 0:
+        if in_idx % validation_ratio != 0:
             train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
         else:
             validation_db.Put('{:0>5d}'.format(in_idx),
