@@ -13,10 +13,10 @@ from glob import glob
 import pandas as pd
 import numpy as np
 import leveldb
-from PIL import Image
+from PIL.Image import open
 from caffe.proto import caffe_pb2
 from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
-from utils import get_logger, transform_img, try_makedirs, get_progress_bar
+from utils import get_logger, transform_img, try_makedirs, get_genre_labels
 
 
 def make_datum(image, label):
@@ -30,6 +30,16 @@ def make_datum(image, label):
         height=IMAGE_HEIGHT,
         label=label,
         data=np.rollaxis(np.array(image), 2).tostring())
+
+
+def get_percentage(curr, total):
+    """Returns progress"""
+    percentage = int((curr / float(total)) * 100)
+    if percentage < 10:
+        return '[   ' + str(percentage) + '% ] '
+    if percentage < 100:
+        return '[  ' + str(percentage) + '% ] '
+    return '[ ' + str(percentage) + '% ] '
 
 
 def main():
@@ -54,9 +64,14 @@ def main():
 
     train_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
     # Creating label, genre data frame
-    genres = pd.DataFrame({'genre': train_data_info['genre'].dropna().unique()})
-    genres.index.name = 'label'
-    genres.to_csv(path.join(DATA_PATH, 'genre_labels.csv'))
+    # genres = pd.DataFrame({'genre': train_data_info['genre'].dropna().unique()})
+    genres = pd.DataFrame(columns=['label', 'genre', 'amount'])
+    genre_label = get_genre_labels()
+    for i, data in enumerate(genre_label):
+        amount = train_data_info[train_data_info['genre'].isin(
+            data['addition'])]
+        genres.loc[i] = [data['label'], data['genre'], len(amount)]
+    genres.to_csv(path.join(DATA_PATH, 'genre_labels.csv'), index=False)
 
     logger.info('Creating train_db_path and validation_db_path')
     train_db = leveldb.LevelDB(train_db_path)
@@ -66,33 +81,36 @@ def main():
     shuffle(train_images)
     null_genre = 0
     null_label = 0
-    bar = get_progress_bar(len(train_images))
-    bar.start()
+    genre_label = get_genre_labels(True)
     for in_idx, img_path in enumerate(train_images):
-        img = transform_img(Image.open(img_path))
-        # print(path.basename(img_path))
-        bar.update(in_idx + 1)
+        img = transform_img(open(img_path))
+        # getting painting genre
         genre = train_data_info[train_data_info['new_filename'] ==
                                 path.basename(img_path)]['genre'].dropna()
+        # some paintings don't have a genre. Checking it
         if len(genre) < 1:
             null_genre += 1
             continue
-        label = genres[genres['genre'] == genre.values[0]].index
-        if len(label) < 1:
+        if genre.values[0] not in genre_label:
+            # No label. It's strange, but let's go on...
             null_label += 1
             logger.critical(str(genre.values[0]) + ' has no label!')
             continue
-        datum = make_datum(img, int(label.values[0]))
+        label = genre_label[genre.values[0]]['label']
+        # printing progress and file name
+        print(
+            get_percentage(in_idx, len(train_images)) + str(label) + ' ' +
+            path.basename(img_path))
+        datum = make_datum(img, int(label))
         if in_idx % validation_ratio != 0:
             train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
         else:
             validation_db.Put('{:0>5d}'.format(in_idx),
                               datum.SerializeToString())
         logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
-    bar.finish()
 
     logger.info('Genre is null: ' + str(null_genre))
-    logger.info('Lable is null: ' + str(null_label))
+    logger.info('label is null: ' + str(null_label))
     logger.info('Finished processing all images')
 
 

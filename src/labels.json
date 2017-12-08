@@ -1,0 +1,92 @@
+[
+    {
+        "genre": "history painting",
+        "label": 0,
+        "addition": [
+            "religious painting",
+            "mythological painting",
+            "allegorical painting",
+            "history painting",
+            "battle painting",
+            "literary painting",
+            "nude painting (nu)"
+        ]
+    },
+    {
+        "genre": "portrait painting",
+        "label": 1,
+        "addition": [
+            "portrait",
+            "self-portrait"
+        ]
+    },
+    {
+        "genre": "genre painting",
+        "label": 2,
+        "addition": [
+            "genre painting",
+            "interior"
+        ]
+    },
+    {
+        "genre": "landscape",
+        "label": 3,
+        "addition": [
+            "landscape",
+            "cityscape",
+            "marina",
+            "capriccio",
+            "veduta",
+            "cloudscape",
+            "pastorale"
+        ]
+    },
+    {
+        "genre": "animal painting",
+        "label": 4,
+        "addition": [
+            "animal painting",
+            "wildlife painting"
+        ]
+    },
+    {
+        "genre": "still life",
+        "label": 5,
+        "addition": [
+            "still life",
+            "flower painting",
+            "vanitas",
+            "bird-and-flower painting"
+        ]
+    },
+    {
+        "genre": "abstract",
+        "label": 6,
+        "addition": [
+            "abstract",
+            "tessellation"
+        ]
+    },
+    {
+        "genre": "mixture",
+        "label": 7,
+        "addition": [
+            "symbolic painting",
+            "urushi-e",
+            "quadratura",
+            "shan shui",
+            "yakusha-e",
+            "bijinga",
+            "advertisement",
+            "miniature",
+            "calligraphy",
+            "poster",
+            "panorama",
+            "caricature",
+            "illustration",
+            "design",
+            "sketch and study",
+            "figurative"
+        ]
+    }
+]
