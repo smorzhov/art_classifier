@@ -1,5 +1,4 @@
-# This is the docker image available. I am using cpu version here. If needed there is gpu version available.
-FROM bvlc/caffe:cpu
+FROM bvlc/caffe:gpu
 
 # Copy the file into docker
 COPY requirements.txt requirements.txt

@@ -11,4 +11,4 @@ momentum: 0.9
 weight_decay: 0.0005
 snapshot: 5000
 snapshot_prefix: "/art_classifier/caffe_models/caffe_model_2/caffe_model_2"
-solver_mode: CPU
+solver_mode: GPU

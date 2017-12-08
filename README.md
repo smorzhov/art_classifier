@@ -16,21 +16,21 @@ You will need the following things properly installed on your computer.
     ```bash
     wget --no-check-certificate "https://onedrive.live.com/download?cid=9B1DCE6B8AAEBBAB&resid=9B1DCE6B8AAEBBAB%211094&authkey=ALTTp6IUBu8v4v4" -O test.tgz;wget --no-check-certificate "https://onedrive.live.com/download?cid=9B1DCE6B8AAEBBAB&resid=9B1DCE6B8AAEBBAB%211095&authkey=ACicffxzKxa9D1U" -O train.tgz;
     ```
-2. At the top of the `art_classifier` folder unrar archive with train and test data.
+2. At the top of the `~art_classifier/src` folder unrar archive with train and test data
     ```bash
     unrar x data.rar
     ```
-    or
+    Or at the top of `~art_classifier/src/data`
     ```bash
     tar -xvf train.tgz;tar -xvf test.tgz;
     ```
 3. If you are planning to use docker, you need to building docker image first. Otherwise, you can skip this step
     ```bash
-    docker build -t caffe:cpu .
+    docker build -t caffe:gpu .
     ```
     Run container
     ```bash
-    docker run -v $PWD/src:/art_classifier -dt --name art caffe:cpu /bin/bash
+    docker run -v $PWD/src:/art_classifier -dt --name art caffe:gpu /bin/bash
     ```
 5. Create leveldb data
 
