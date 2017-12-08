@@ -10,18 +10,11 @@ layer {
   transform_param {
     mirror: true
     crop_size: 256
-    mean_file: "/home/ivanovskii/workspace/art_classifier/input/mean.binaryproto"
+
+    mean_file: "/art_classifier/input/mean.binaryproto"
   }
-# mean pixel / channel-wise mean instead of mean image
-#  transform_param {
-#    crop_size: 227
-#    mean_value: 104
-#    mean_value: 117
-#    mean_value: 123
-#    mirror: true
-#  }
   data_param {
-    source: "/home/ivanovskii/workspace/art_classifier/input/train_leveldb"
+    source: "/art_classifier/input/train_leveldb"
     batch_size: 256
     backend: LMDB
   }
@@ -37,18 +30,11 @@ layer {
   transform_param {
     mirror: false
     crop_size: 256
-    mean_file: "/home/ivanovskii/workspace/art_classifier/input/mean.binaryproto"
+
+    mean_file: "/art_classifier/input/mean.binaryproto"
   }
-# mean pixel / channel-wise mean instead of mean image
-#  transform_param {
-#    crop_size: 227
-#    mean_value: 104
-#    mean_value: 117
-#    mean_value: 123
-#    mirror: true
-#  }
   data_param {
-    source: "/home/ivanovskii/workspace/art_classifier/input/validation_leveldb"
+    source: "/art_classifier/input/validation_leveldb"
     batch_size: 50
     backend: LMDB
   }
@@ -370,7 +356,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 2
+    num_output: 42
     weight_filler {
       type: "gaussian"
       std: 0.01

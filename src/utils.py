@@ -12,7 +12,7 @@ IMAGE_HEIGHT = 256
 MODE = 'gpu'
 
 CWD = path.dirname(path.realpath(__file__))
-CAFFE_PATH = '/home/ubuntu/caffe/'
+CAFFE_PATH = '$CAFFE_ROOT'
 DATA_PATH = path.join(CWD, 'data')
 
 

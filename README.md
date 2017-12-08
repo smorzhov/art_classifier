@@ -9,46 +9,56 @@ You will need the following things properly installed on your computer.
 ## Installation
 
 * `git clone https://github.com/smorzhov/art_classifier.git`
-* `cd art_classifier`
-* `pip install -r requirements.txt`
 
 ## Running
 
-1. First of all, you need data to train. You can download it [here](https://drive.google.com/file/d/1uSz9xfYQD3VSN17wlxdGZ6yDpO5uWz6A/view?usp=sharing). Also, you can download train and test data as tgz archives (smaller size) with the following commands:
-```bash
-wget --no-check-certificate "https://onedrive.live.com/download?cid=9B1DCE6B8AAEBBAB&resid=9B1DCE6B8AAEBBAB%211094&authkey=ALTTp6IUBu8v4v4" -O test.tgz;wget --no-check-certificate "https://onedrive.live.com/download?cid=9B1DCE6B8AAEBBAB&resid=9B1DCE6B8AAEBBAB%211095&authkey=ACicffxzKxa9D1U" -O train.tgz;
-```
+1. First of all, you need the data to train. You can download it [here](https://drive.google.com/file/d/1uSz9xfYQD3VSN17wlxdGZ6yDpO5uWz6A/view?usp=sharing). Also, you can download train and test data as tgz archives (smaller size) with the following commands:
+    ```bash
+    wget --no-check-certificate "https://onedrive.live.com/download?cid=9B1DCE6B8AAEBBAB&resid=9B1DCE6B8AAEBBAB%211094&authkey=ALTTp6IUBu8v4v4" -O test.tgz;wget --no-check-certificate "https://onedrive.live.com/download?cid=9B1DCE6B8AAEBBAB&resid=9B1DCE6B8AAEBBAB%211095&authkey=ACicffxzKxa9D1U" -O train.tgz;
+    ```
 2. At the top of the `art_classifier` folder unrar archive with train and test data.
     ```bash
     unrar x data.rar` or `unp data.rar
     ```
-3. Create leveldb data
+    or
     ```bash
-    python create_leveldb.py
+    tar -xvf train.tgz;tar -xvf test.tgz;
     ```
-4. Generate the mean image of training data
+3. Building docker image
     ```bash
-    /home/lebedev/caffe/build/tools/compute_image_mean -backend=leveldb /home/ivanovskii/workspace/art_classifier/input/train_leveldb /home/ivanovskii/workspace/art_classifier/input/mean.binaryproto
+    docker build -t caffe:cpu .
     ```
-5. Model training
+4. Run container
     ```bash
-    /home/lebedev/caffe/build/tools/caffe train --solver /home/ivanovskii/workspace/art_classifier/caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee /home/ivanovskii/workspace/art_classifier/caffe_models/caffe_model_1/model_1_train.log
+    docker run -v $PWD/src:/art_classifier -dt --name art caffe:cpu /bin/bash
     ```
-6. Plotting the learning curves
+5. Create leveldb data
     ```bash
-    python /home/ivanovskii/workspace/art_classifier/plot_learning_curve.py /home/ivanovskii/workspace/art_classifier/caffe_models/caffe_model_1/model_1_train.log /home/ivanovskii/workspace/art_classifier/caffe_models/caffe_model_1/caffe_model_1_learning_curve.png
+    docker exec art python create_leveldb.py"
     ```
-7. Prediction on new data
+6. Generate the mean image of training data
     ```bash
-    python make_predictions.py
+    docker exec art compute_image_mean -backend=leveldb input/train_leveldb input/mean.binaryproto
+    ```
+7. Model training
+    ```bash
+    docker exec art caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee caffe_models/caffe_model_1/model_1_train.log
+    ```
+8. Plotting the learning 
+    ```bash
+    docker exec art python plot_learning_curve.py caffe_models/caffe_model_1/model_1_train.log caffe_models/caffe_model_1/caffe_model_1_learning_curve.png
+    ```
+9. Prediction on new data
+    ```bash
+    docker exec art python make_predictions.py
     ```
     For more details how to use this script you can run
     ```bash
-    python make_predictions.py -h
+    docker exec art python make_predictions.py -h
     ```
 
 Optionally you can print the model architecture by executing the command below. The model architecture image will be stored under `~/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png` 
 
 ```bash
-python /home/lebedev/caffe/python/draw_net.py /home/ivanovskii/workspace/art_classifier/caffe_models/caffe_model_1/caffenet_train_val_1.prototxt /home/ivanovskii/workspace/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png
+docker exec art python /opt/caffe/python/draw_net.py /art_classifier/caffe_models/caffe_model_1/caffenet_train_val_1.prototxt /art_classifier/caffe_models/caffe_model_1/caffe_model_1.png
 ``` 
