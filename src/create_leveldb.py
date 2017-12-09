@@ -103,10 +103,11 @@ def main():
         for i, img in enumerate(imgs):
             datum = make_datum(img, int(label))
             if in_idx + i % validation_ratio != 0:
-                train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
+                train_db.Put('{:0>5d}'.format(in_idx),
+                             datum.SerializeToString())
             else:
                 validation_db.Put('{:0>5d}'.format(in_idx),
-                                datum.SerializeToString())
+                                  datum.SerializeToString())
         logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
 
     logger.info('Genre is null: ' + str(null_genre))
