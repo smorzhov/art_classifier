@@ -13,9 +13,8 @@ from glob import glob
 import pandas as pd
 import numpy as np
 import leveldb
-from PIL.Image import open
 from caffe.proto import caffe_pb2
-from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
+from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH, generate_imgs
 from utils import get_logger, transform_img, try_makedirs, get_genre_labels
 
 
@@ -83,7 +82,6 @@ def main():
     null_label = 0
     genre_label = get_genre_labels(True)
     for in_idx, img_path in enumerate(train_images):
-        img = transform_img(open(img_path))
         # getting painting genre
         genre = train_data_info[train_data_info['new_filename'] ==
                                 path.basename(img_path)]['genre'].dropna()
@@ -101,12 +99,14 @@ def main():
         print(
             get_percentage(in_idx, len(train_images)) + str(label) + ' ' +
             path.basename(img_path))
-        datum = make_datum(img, int(label))
-        if in_idx % validation_ratio != 0:
-            train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
-        else:
-            validation_db.Put('{:0>5d}'.format(in_idx),
-                              datum.SerializeToString())
+        imgs = generate_imgs(transform_img(img_path))
+        for i, img in enumerate(imgs):
+            datum = make_datum(img, int(label))
+            if in_idx + i % validation_ratio != 0:
+                train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
+            else:
+                validation_db.Put('{:0>5d}'.format(in_idx),
+                                datum.SerializeToString())
         logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
 
     logger.info('Genre is null: ' + str(null_genre))

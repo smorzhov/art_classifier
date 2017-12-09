@@ -26,11 +26,11 @@ You will need the following things properly installed on your computer.
     ```
 3. If you are planning to use nvidia-docker, you need to building nvidia-docker image first. Otherwise, you can skip this step
     ```bash
-    nvidia-docker build -t sm_caffe_keras:gpu .
+    nvidia-docker build -t sm_caffe:gpu .
     ```
     Run container
     ```bash
-    nvidia-docker run -v $PWD/src:/art_classifier -dt --name art sm_caffe_keras:gpu /bin/bash
+    nvidia-docker run -v $PWD/src:/art_classifier -dt --name art sm_caffe:gpu /bin/bash
     ```
 5. Create leveldb data
 

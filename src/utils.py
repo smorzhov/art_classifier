@@ -3,8 +3,11 @@ Some useful utilities
 """
 import logging
 import json
+from random import uniform
 from os import path, makedirs
-from PIL.Image import LANCZOS
+import numpy as np
+from scipy.misc import imread, imresize
+from skimage.exposure import equalize_adapthist
 
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
@@ -48,9 +51,16 @@ def get_logger(file):
     return logging
 
 
-def transform_img(image, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
+def transform_img(image_path, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
     """Returns resized image"""
-    return image.resize((width, height), resample=LANCZOS)
+    image = imresize(imread(image_path), (height, width), interp='lanczos')
+    return equalize_adapthist(image, clip_limit=0.03)
+
+
+def generate_imgs(image):
+    """Generates images"""
+    images = [image, np.fliplr(image)]
+    return images
 
 
 def try_makedirs(name):

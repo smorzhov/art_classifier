@@ -11,8 +11,6 @@ RUN pip install -r requirements.txt && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-FROM gw000/keras:2.1.1-py2-tf-gpu
-
 WORKDIR /art_classifier
 
 VOLUME ["/art_classifier"]
