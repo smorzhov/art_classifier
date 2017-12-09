@@ -1,6 +1,7 @@
-Pillow==4.3.0
-leveldb==0.194
+scipy==1.0.0
+pandas==0.21.0
 matplotlib==2.1.0
 numpy==1.13.3
-pandas==0.21.0
-progressbar2==3.34.3
+Pillow==4.3.0
+leveldb==0.194
+scikit-image==0.13.1
