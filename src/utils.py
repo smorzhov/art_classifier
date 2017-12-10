@@ -3,11 +3,10 @@ Some useful utilities
 """
 import logging
 import json
-from random import uniform
 from os import path, makedirs
 import numpy as np
-from scipy.misc import imread, imresize
-from skimage.exposure import equalize_adapthist
+from PIL.Image import open as open_img, LANCZOS
+from PIL.ImageOps import equalize
 
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
@@ -52,8 +51,9 @@ def get_logger(file):
 
 def transform_img(image_path, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
     """Returns resized image"""
-    image = imresize(imread(image_path), (height, width), interp='lanczos')
-    return equalize_adapthist(image, clip_limit=0.03)
+    image = open_img(image_path).resize((width, height), resample=LANCZOS)
+    image = equalize(image)
+    return image
 
 
 def augment_img(image):
