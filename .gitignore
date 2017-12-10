@@ -61,5 +61,6 @@ node_modules
 *.vsix
 .vscode/symbols.json
 .vscode-test
-data
-log
+src/data/
+src/input/*leveldb/
+src/log/
