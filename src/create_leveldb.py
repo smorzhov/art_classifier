@@ -1,6 +1,6 @@
 """
 This script divides the training images into 2 sets and
-stores them in lmdb databases for training and validation.
+stores them in leveldb databases for training and validation.
 
 Usage: python create_leveldb.py
 """
@@ -101,6 +101,8 @@ def main():
             path.basename(img_path))
         img = transform_img(img_path)
         datum = make_datum(img, int(label))
+        # with open('datum', 'w') as file:
+        #     file.write(datum.SerializeToString())
         if in_idx % validation_ratio != 0:
             train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
         else:

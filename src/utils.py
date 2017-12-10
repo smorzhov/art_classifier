@@ -53,6 +53,7 @@ def transform_img(image_path, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
     """Returns resized image"""
     image = open_img(image_path).resize((width, height), resample=LANCZOS)
     image = equalize(image)
+    # image.save('out.jpg')
     return image
 
 

@@ -1,4 +1,4 @@
-FROM bvlc/caffe:gpu as caffe
+FROM  nvcr.io/nvidia/caffe:17.10
 
 # Copy the file into docker
 COPY requirements.txt requirements.txt

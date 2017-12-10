@@ -16,7 +16,7 @@ layer {
   data_param {
     source: "/art_classifier/input/train_leveldb"
     batch_size: 256
-    backend: LMDB
+    backend: LEVELDB
   }
 }
 layer {
@@ -36,7 +36,7 @@ layer {
   data_param {
     source: "/art_classifier/input/validation_leveldb"
     batch_size: 50
-    backend: LMDB
+    backend: LEVELDB
   }
 }
 layer {
