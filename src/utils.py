@@ -16,8 +16,7 @@ MODE = 'gpu'
 
 CWD = path.dirname(path.realpath(__file__))
 DATA_PATH = path.join(CWD, 'data')
-# CAFFE_PATH = '$CAFFE_ROOT'
-CAFFE_PATH = '/home/lebedev/caffe'
+CAFFE_PATH = '$CAFFE_ROOT'
 
 
 def get_genre_labels(transofrm=False, file=path.join(CWD, 'labels.json')):
@@ -57,7 +56,7 @@ def transform_img(image_path, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
     return equalize_adapthist(image, clip_limit=0.03)
 
 
-def generate_imgs(image):
+def augment_img(image):
     """Generates images"""
     images = [image, np.fliplr(image)]
     return images

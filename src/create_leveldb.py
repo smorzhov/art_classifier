@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 import leveldb
 from caffe.proto import caffe_pb2
-from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH, generate_imgs
+from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
 from utils import get_logger, transform_img, try_makedirs, get_genre_labels
 
 
@@ -99,15 +99,13 @@ def main():
         print(
             get_percentage(in_idx, len(train_images)) + str(label) + ' ' +
             path.basename(img_path))
-        imgs = generate_imgs(transform_img(img_path))
-        for i, img in enumerate(imgs):
-            datum = make_datum(img, int(label))
-            if in_idx + i % validation_ratio != 0:
-                train_db.Put('{:0>5d}'.format(in_idx),
-                             datum.SerializeToString())
-            else:
-                validation_db.Put('{:0>5d}'.format(in_idx),
-                                  datum.SerializeToString())
+        img = transform_img(img_path)
+        datum = make_datum(img, int(label))
+        if in_idx % validation_ratio != 0:
+            train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
+        else:
+            validation_db.Put('{:0>5d}'.format(in_idx),
+                              datum.SerializeToString())
         logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
 
     logger.info('Genre is null: ' + str(null_genre))
