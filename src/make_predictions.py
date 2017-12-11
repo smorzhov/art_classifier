@@ -8,10 +8,12 @@ Usage: python make_predictions.py [-h]
 import argparse
 from glob import glob
 from os import path
+import pandas as pd
 import numpy as np
 import caffe
 from caffe.proto import caffe_pb2
-from utils import CWD, DATA_PATH, get_logger, MODE, transform_img
+from utils import CWD, DATA_PATH, get_logger, MODE, CAFFE_MODELS_PATH
+from utils import get_genre_labels, transform_img
 
 
 def get_model_data(mean_file, model_arc, model_weights):
@@ -51,7 +53,8 @@ def predict(net, transformer):
     for img_path in test_images:
         img = transform_img(img_path)
 
-        net.blobs['data'].data[...] = transformer.preprocess('data', np.array(img))
+        net.blobs['data'].data[...] = transformer.preprocess(
+            'data', np.array(img))
         out = net.forward()
         pred_probas = out['prob']
 
@@ -63,17 +66,48 @@ def predict(net, transformer):
     return test_ids, predictions
 
 
-def make_submission_file(test_ids, predictions):
+def make_submission_file(submission_model_path, test_ids, predictions):
     """
     Making submission file
     """
-    with open(
-            path.join(CWD, 'caffe_models', 'caffe_model_1',
-                      'submission_model_1.csv'), 'w') as file:
-        file.write('id,label\n')
+    with open(submission_model_path, 'w') as file:
+        file.write('img,label\n')
         for test_id, prediction in zip(test_ids, predictions):
             file.write(str(test_id) + "," + str(prediction) + "\n")
     file.close()
+
+
+def analyze_predictions(submission_model_path, csv_result):
+    """It analyze predictions and shows result"""
+    all_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
+    submission_model = pd.read_csv(submission_model_path)
+    genre_label = get_genre_labels(True)
+    null_genre = 0
+    null_label = 0
+    exact_labels = []
+    errors = 0
+    for _, row in submission_model.iterrows():
+        genre = all_data_info[all_data_info['new_filename'] == row['img']][
+            'genre'].dropna()
+        # some paintings don't have a genre. Checking it
+        if len(genre) < 1:
+            null_genre += 1
+            exact_labels.append(None)
+            continue
+        if genre.values[0] not in genre_label:
+            # No label. It's strange, but let's go on...
+            null_label += 1
+            continue
+        exact_labels.append(int(genre_label[genre.values[0]]['label']))
+        if row['label'] != exact_labels[-1]:
+            errors += 1
+
+    submission_model['exact_label'] = exact_labels
+    submission_model.to_csv(csv_result, index=False)
+    print('Genre is null: ' + str(null_genre))
+    print('Label is null: ' + str(null_label))
+    print('Errors: ' + str(errors) + ' (out of ' + str(len(submission_model)) + ')')
+    print('Accuracy: ' + str(errors / float(len(submission_model))))
 
 
 def init_argparse():
@@ -91,7 +125,7 @@ def init_argparse():
         '--architecture',
         nargs='?',
         help='prototxt file path with mode architecture',
-        default=path.join(CWD, 'caffe_models', 'caffe_model_1',
+        default=path.join(CAFFE_MODELS_PATH, 'caffe_model_1',
                           'caffenet_deploy_1.prototxt'),
         type=str)
     parser.add_argument(
@@ -106,7 +140,7 @@ def init_argparse():
         '--weights',
         nargs='?',
         help='weight file path',
-        default=path.join(CWD, 'caffe_models', 'caffe_model_1',
+        default=path.join(CAFFE_MODELS_PATH, 'caffe_model_1',
                           'caffe_model_1_iter_40000.caffemodel'),
         type=str)
     return parser
@@ -114,6 +148,8 @@ def init_argparse():
 
 def main():
     """Main function"""
+    submission_model_path = path.join(CAFFE_MODELS_PATH, 'caffe_model_1',
+                                      'submission_model_1.csv')
     parser = init_argparse()
     args = parser.parse_args()
 
@@ -126,7 +162,10 @@ def main():
     net, transformer = get_model_data(args.mean, args.architecture,
                                       args.weights)
     test_ids, predictions = predict(net, transformer)
-    make_submission_file(test_ids, predictions)
+    make_submission_file(submission_model_path, test_ids, predictions)
+    analyze_predictions(submission_model_path,
+                        path.join(
+                            path.dirname(args.weights), 'predictions.csv'))
 
     # mean_blob = caffe_pb2.BlobProto()
     # with open(args.mean) as file:
