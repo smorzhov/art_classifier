@@ -109,7 +109,7 @@ def main():
             continue
         label = genre_label[genre.values[0]]['label']
         imgs = generate_images(
-            img_path, genres[genres['label'] == label]['amount'].values[0])
+            img_path, genres[genres['label'] == int(label)]['amount'].values[0])
         for i, img in enumerate(imgs):
             datum = make_datum(img, int(label))
             # with open('datum', 'w') as file:

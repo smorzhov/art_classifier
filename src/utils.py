@@ -58,9 +58,9 @@ def transform_img(image_path, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
 
 def augment_img(image_path, amount, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
     """Returns an array of `amount` generated images"""
-    img = np.array(open_img(image_path))
     if amount <= 1:
-        return [transform(img, width, height)]
+        return [transform(open_img(image_path), width, height)]
+    img = np.array(open_img(image_path))
     # The array has shape (amount, width, height, 3)
     # and dtype uint8.
     images = np.array([img for _ in range(amount)], dtype=np.uint8)
@@ -109,5 +109,5 @@ def try_makedirs(name):
 
 def transform(image, width, height):
     """Returns resized and eqialized copy of the image"""
-    img = image.resize((width, height), resample=LANCZOS)
+    img = image.resize((width, height), LANCZOS)
     return equalize(img)
