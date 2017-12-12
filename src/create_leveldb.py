@@ -9,13 +9,16 @@ from random import shuffle
 from os import path
 from shutil import rmtree
 from glob import glob
-
+from random import random
 import pandas as pd
 import numpy as np
 import leveldb
 from caffe.proto import caffe_pb2
 from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
-from utils import get_logger, transform_img, try_makedirs, get_genre_labels
+from utils import get_logger, augment_img, try_makedirs, get_genre_labels
+
+# approximate number of images per class
+IMAGES_PER_CLASS = 30000
 
 
 def make_datum(image, label):
@@ -41,6 +44,16 @@ def get_percentage(curr, total):
     return '[ ' + str(percentage) + '% ] '
 
 
+def generate_images(image_path, number_of_imgs):
+    """Generates some images"""
+    amount = IMAGES_PER_CLASS / float(number_of_imgs)
+    if amount <= 1:
+        return augment_img(image_path, 1)
+    if random() > 1 - (amount - int(amount)):
+        amount += 1
+    return augment_img(image_path, int(amount))
+
+
 def main():
     """Main function"""
 
@@ -61,14 +74,13 @@ def main():
         logger.info('Removing ' + validation_db_path)
         rmtree(validation_db_path)
 
-    train_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
+    all_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
     # Creating label, genre data frame
-    # genres = pd.DataFrame({'genre': train_data_info['genre'].dropna().unique()})
+    # genres = pd.DataFrame({'genre': all_data_info['genre'].dropna().unique()})
     genres = pd.DataFrame(columns=['label', 'genre', 'amount'])
     genre_label = get_genre_labels()
     for i, data in enumerate(genre_label):
-        amount = train_data_info[train_data_info['genre'].isin(
-            data['addition'])]
+        amount = all_data_info[all_data_info['genre'].isin(data['addition'])]
         genres.loc[i] = [data['label'], data['genre'], len(amount)]
     genres.to_csv(path.join(DATA_PATH, 'genre_labels.csv'), index=False)
 
@@ -80,11 +92,12 @@ def main():
     shuffle(train_images)
     null_genre = 0
     null_label = 0
+    generated_imgs = 0
     genre_label = get_genre_labels(True)
     for in_idx, img_path in enumerate(train_images):
         # getting painting genre
-        genre = train_data_info[train_data_info['new_filename'] ==
-                                path.basename(img_path)]['genre'].dropna()
+        genre = all_data_info[all_data_info['new_filename'] == path.basename(
+            img_path)]['genre'].dropna()
         # some paintings don't have a genre. Checking it
         if len(genre) < 1:
             null_genre += 1
@@ -95,20 +108,26 @@ def main():
             logger.critical(str(genre.values[0]) + ' has no label!')
             continue
         label = genre_label[genre.values[0]]['label']
+        imgs = generate_images(
+            img_path, genres[genres['label'] == label]['amount'].values[0])
+        for i, img in enumerate(imgs):
+            datum = make_datum(img, int(label))
+            # with open('datum', 'w') as file:
+            #     file.write(datum.SerializeToString())
+            if (in_idx + generated_imgs + i) % validation_ratio != 0:
+                train_db.Put('{:0>5d}'.format(in_idx),
+                             datum.SerializeToString())
+            else:
+                validation_db.Put('{:0>5d}'.format(in_idx),
+                                  datum.SerializeToString())
+        generated_imgs += len(imgs)
+        logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path + ' (+ ' +
+                     str(len(imgs)) + ' augmented)')
+
         # printing progress and file name
         print(
             get_percentage(in_idx, len(train_images)) + str(label) + ' ' +
             path.basename(img_path))
-        img = transform_img(img_path)
-        datum = make_datum(img, int(label))
-        # with open('datum', 'w') as file:
-        #     file.write(datum.SerializeToString())
-        if in_idx % validation_ratio != 0:
-            train_db.Put('{:0>5d}'.format(in_idx), datum.SerializeToString())
-        else:
-            validation_db.Put('{:0>5d}'.format(in_idx),
-                              datum.SerializeToString())
-        logger.debug('{:0>5d}'.format(in_idx) + ':' + img_path)
 
     logger.info('Genre is null: ' + str(null_genre))
     logger.info('label is null: ' + str(null_label))
