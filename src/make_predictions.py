@@ -106,7 +106,8 @@ def analyze_predictions(submission_model_path, csv_result):
     submission_model.to_csv(csv_result, index=False)
     print('Genre is null: ' + str(null_genre))
     print('Label is null: ' + str(null_label))
-    print('Errors: ' + str(errors) + ' (out of ' + str(len(submission_model)) + ')')
+    print('Errors: ' + str(errors) + ' (out of ' + str(len(submission_model)) +
+          ')')
     print('Accuracy: ' + str(errors / float(len(submission_model))))
 
 
