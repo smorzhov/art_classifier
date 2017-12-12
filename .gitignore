@@ -61,6 +61,14 @@ node_modules
 *.vsix
 .vscode/symbols.json
 .vscode-test
+
+# Project specific
 src/data/
 src/input/*leveldb/
 src/log/
+src/core
+*caffemodel
+*solverstate
+*.binaryproto
+*predictions.csv
+*submission_model_*.csv
