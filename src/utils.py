@@ -16,6 +16,7 @@ MODE = 'gpu'
 
 CWD = path.dirname(path.realpath(__file__))
 DATA_PATH = path.join(CWD, 'data')
+CAFFE_MODELS_PATH = path.join(CWD, 'caffe_models')
 CAFFE_PATH = '$CAFFE_ROOT'
 
 

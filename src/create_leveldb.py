@@ -130,7 +130,7 @@ def main():
             path.basename(img_path))
 
     logger.info('Genre is null: ' + str(null_genre))
-    logger.info('label is null: ' + str(null_label))
+    logger.info('Label is null: ' + str(null_label))
     logger.info('Finished processing all images')
 
 
