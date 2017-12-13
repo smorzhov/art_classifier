@@ -33,63 +33,28 @@ You will need the following things properly installed on your computer.
     nvidia-docker run -v $PWD/src:/art_classifier -dt --name art sm_caffe:gpu /bin/bash
     ```
 5. Create leveldb data
-
-    Docker
     ```bash
     nvidia-docker exec art python create_leveldb.py
     ```
-    Native
-    ```bash
-    python create_leveldb.py
-    ```
 6. Generate the mean image of training data
-
-    Docker
     ```bash
     nvidia-docker exec art compute_image_mean -backend=leveldb input/train_leveldb input/mean.binaryproto
     ```
-    Native
-    ```bash
-    /home/lebedev/caffe/build/tools/compute_image_mean -backend=leveldb /home/ivanovskii/workspace/art_classifier/src/input/train_leveldb /home/ivanovskii/workspace/art_classifier/src/input/mean.binaryproto
-    ```
 7. Model training
-
-    Docker
     ```bash
     nvidia-docker exec art caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee log/model_1_train.log
     ```
-    Native
-    ```bash
-    /home/lebedev/caffe/build/tools/caffe train --solver /home/ivanovskii/workspace/art_classifier/src/caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee /home/ivanovskii/workspace/art_classifier/src/caffe_models/caffe_model_1/model_1_train.log
-    ```
 8. Plotting the learning 
-
-    Docker
     ```bash
     nvidia-docker exec art python plot_learning_curve.py caffe_models/caffe_model_1/model_1_train.log caffe_models/caffe_model_1/caffe_model_1_learning_curve.png
     ```
-    Native
-    ```bash
-    python /home/ivanovskii/workspace/art_classifier/src/plot_learning_curve.py /home/ivanovskii/workspace/art_classifier/src/caffe_models/caffe_model_1/model_1_train.log /home/ivanovskii/workspace/art_classifier/src/caffe_models/caffe_model_1/caffe_model_1_learning_curve.png
-    ```
 9. Prediction on new data
 
-    Docker
     ```bash
     nvidia-docker exec art python make_predictions.py [-h]
     ```
-    Native
-    ```bash
-    python make_predictions.py [-h]
-    ```
 
 Optionally you can print the model architecture by executing the command below. The model architecture image will be stored under `~/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png` 
-
-Docker
 ```bash
 nvidia-docker exec art python /opt/caffe/python/draw_net.py /art_classifier/caffe_models/caffe_model_1/caffenet_train_val_1.prototxt /art_classifier/caffe_models/caffe_model_1/caffe_model_1.png
 ``` 
-Native
-```bash
-python /home/lebedev/caffe/python/draw_net.py /home/ivanovskii/workspace/art_classifier/src/caffe_models/caffe_model_1/caffenet_train_val_1.prototxt /home/ivanovskii/workspace/art_classifier/src/caffe_models/caffe_model_1/caffe_model_1.png
-```
