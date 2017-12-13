@@ -39,14 +39,16 @@ def get_model_data(mean_file, model_arc, model_weights):
     return net, transformer
 
 
-def predict(net, transformer):
+def predict(net, transformer, img_path):
     """
     Making predictions
     """
     logger = get_logger(path.splitext(path.basename(__file__))[0] + '.log')
 
     # Reading image paths
-    test_images = [img for img in glob(path.join(DATA_PATH, 'test', '*.jpg'))]
+    test_images = [img_path]
+    if path.isdir(img_path):
+        test_images = [img for img in glob(path.join(img_path, '*.jpg'))]
     test_ids = []
     predictions = []
     # Making predictions
@@ -144,6 +146,14 @@ def init_argparse():
         default=path.join(CAFFE_MODELS_PATH, 'caffe_model_1',
                           'caffe_model_1_iter_40000.caffemodel'),
         type=str)
+    parser.add_argument(
+        '-f',
+        '--file',
+        nargs='?',
+        default=path.join(DATA_PATH, 'test'),
+        help=
+        'Path to image or directory. In case of directory only jpg images will be read)',
+        type=str)
     return parser
 
 
@@ -162,7 +172,10 @@ def main():
 
     net, transformer = get_model_data(args.mean, args.architecture,
                                       args.weights)
-    test_ids, predictions = predict(net, transformer)
+    test_ids, predictions = predict(net, transformer, args.file)
+    if len(predictions) == 1:
+        print(test_ids, predictions)
+        return
     make_submission_file(submission_model_path, test_ids, predictions)
     analyze_predictions(submission_model_path,
                         path.join(
