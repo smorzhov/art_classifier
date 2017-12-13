@@ -157,6 +157,16 @@ def init_argparse():
     return parser
 
 
+def label_to_class_name(label):
+    """Transforms label to class name"""
+    try:
+        genre_label = pd.read_csv(path.join(DATA_PATH, 'genre_labels.csv'))
+        return genre_label[genre_label['label'] == int(label)]['genre'].values[
+            0]
+    except IOError:
+        return label
+
+
 def main():
     """Main function"""
     submission_model_path = path.join(CAFFE_MODELS_PATH, 'caffe_model_1',
@@ -174,7 +184,7 @@ def main():
                                       args.weights)
     test_ids, predictions = predict(net, transformer, args.file)
     if len(predictions) == 1:
-        print(test_ids, predictions)
+        print(test_ids[0], label_to_class_name(predictions[0]))
         return
     make_submission_file(submission_model_path, test_ids, predictions)
     analyze_predictions(submission_model_path,
