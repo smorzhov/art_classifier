@@ -5,11 +5,10 @@ stores them in leveldb databases for training and validation.
 Usage: python create_leveldb.py
 """
 
-from random import shuffle
+from random import shuffle, random
 from os import path
 from shutil import rmtree
 from glob import glob
-from random import random
 import pandas as pd
 import numpy as np
 import leveldb
