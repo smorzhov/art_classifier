@@ -1,23 +1,19 @@
 [
     {
-        "genre": "history painting",
+        "genre": "abstract",
         "label": 0,
         "addition": [
-            "religious painting",
-            "mythological painting",
-            "allegorical painting",
-            "history painting",
-            "battle painting",
-            "literary painting",
-            "nude painting (nu)"
+            "abstract",
+            "tessellation"
         ]
     },
     {
-        "genre": "portrait painting",
+        "genre": "cityscape",
         "label": 1,
         "addition": [
-            "portrait",
-            "self-portrait"
+            "cityscape",
+            "capriccio",
+            "veduta"
         ]
     },
     {
@@ -25,68 +21,76 @@
         "label": 2,
         "addition": [
             "genre painting",
-            "interior"
+            "interior",
+            "yakusha-e"
+        ]
+    },
+    {
+        "genre": "illustration",
+        "label": 3,
+        "addition": [
+            "illustration",
+            "advertisement",
+            "poster"
         ]
     },
     {
         "genre": "landscape",
-        "label": 3,
+        "label": 4,
         "addition": [
             "landscape",
-            "cityscape",
             "marina",
-            "capriccio",
-            "veduta",
             "cloudscape",
+            "wildlife painting",
+            "shan shui",
             "pastorale"
         ]
     },
     {
-        "genre": "animal painting",
-        "label": 4,
+        "genre": "nude painting",
+        "label": 5,
         "addition": [
-            "animal painting",
-            "wildlife painting"
+            "nude painting (nu)"
+        ]
+    },
+    {
+        "genre": "portrait",
+        "label": 6,
+        "addition": [
+            "portrait",
+            "self-portrait",
+            "bijinga",
+            "caricature"
+        ]
+    },
+    {
+        "genre": "history painting",
+        "label": 7,
+        "addition": [
+            "religious painting",
+            "mythological painting",
+            "allegorical painting",
+            "history painting",
+            "battle painting",
+            "literary painting",
+            "quadratura"
+        ]
+    },
+    {
+        "genre": "sketch and study",
+        "label": 8,
+        "addition": [
+            "sketch and study"
         ]
     },
     {
         "genre": "still life",
-        "label": 5,
+        "label": 9,
         "addition": [
             "still life",
             "flower painting",
             "vanitas",
             "bird-and-flower painting"
-        ]
-    },
-    {
-        "genre": "abstract",
-        "label": 6,
-        "addition": [
-            "abstract",
-            "tessellation"
-        ]
-    },
-    {
-        "genre": "mixture",
-        "label": 7,
-        "addition": [
-            "symbolic painting",
-            "urushi-e",
-            "quadratura",
-            "shan shui",
-            "yakusha-e",
-            "bijinga",
-            "advertisement",
-            "miniature",
-            "calligraphy",
-            "poster",
-            "panorama",
-            "caricature",
-            "illustration",
-            "design",
-            "sketch and study",
-            "figurative"
         ]
     }
 ]

@@ -1903,9 +1903,9 @@ layer {
   }
 }
 layer {
-  name: "fc8"
+  name: "fc8-art"
   bottom: "fc7"
-  top: "fc8"
+  top: "fc8-art"
   type: "InnerProduct"
    param {
      lr_mult: 1
@@ -1929,14 +1929,14 @@ layer {
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "fc8"
+  bottom: "fc8-art"
   bottom: "label"
   top: "loss/loss"
 }
 layer {
   name: "accuracy/top1"
   type: "Accuracy"
-  bottom: "fc8"
+  bottom: "fc8-art"
   bottom: "label"
   top: "accuracy@1"
   include: { phase: TEST }
@@ -1947,7 +1947,7 @@ layer {
 layer {
   name: "accuracy/top3"
   type: "Accuracy"
-  bottom: "fc8"
+  bottom: "fc8-art"
   bottom: "label"
   top: "accuracy@3"
   include: { phase: TEST }

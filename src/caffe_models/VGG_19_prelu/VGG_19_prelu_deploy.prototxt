@@ -1865,9 +1865,9 @@ layer {
   }
 }
 layer {
-  name: "fc8"
+  name: "fc8-art"
   bottom: "fc7"
-  top: "fc8"
+  top: "fc8-art"
   type: "InnerProduct"
    param {
      lr_mult: 1
@@ -1891,6 +1891,6 @@ layer {
 layer {
   name: "prob"
   type: "Softmax"
-  bottom: "fc8"
+  bottom: "fc8-art"
   top: "prob"
 }
