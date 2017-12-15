@@ -27,10 +27,10 @@ def generate_logs(model_log_path, must_clear=True):
     model_log_dir_path = path.dirname(model_log_path)
     chdir(model_log_dir_path)
     # Parsing training/validation logs
-    command = CAFFE_PATH + 'tools/extra/parse_log.sh ' + model_log_path
+    command = CAFFE_PATH + 'tools/extra/parse_log.py ' + model_log_path
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
     process.wait()
-    #Read training and test logs
+    # Read training and test logs
     train_log_path = model_log_path + '.train'
     test_log_path = model_log_path + '.test'
     train_log = pd.read_csv(train_log_path, delim_whitespace=True)
