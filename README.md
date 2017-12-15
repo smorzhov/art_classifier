@@ -32,13 +32,13 @@ You will need the following things properly installed on your computer.
     ```bash
     nvidia-docker run -v $PWD/src:/art_classifier -dt --name art sm_caffe:gpu /bin/bash
     ```
-5. Create leveldb data
+5. Create lmdb data
     ```bash
-    nvidia-docker exec art python create_leveldb.py
+    nvidia-docker exec art python create_lmdb.py
     ```
 6. Generate the mean image of training data
     ```bash
-    nvidia-docker exec art compute_image_mean -backend=leveldb input/train_leveldb input/mean.binaryproto
+    nvidia-docker exec art compute_image_mean -backend=lmdb input/train_lmdb input/mean.binaryproto
     ```
 7. Model training
     ```bash

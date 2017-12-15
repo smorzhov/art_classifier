@@ -14,7 +14,7 @@ layer {
     mean_file: "/art_classifier/input/mean.binaryproto"
   }
   data_param {
-    source: "/art_classifier/input/train_leveldb"
+    source: "/art_classifier/input/train_lmdb"
     batch_size: 256
     backend: LEVELDB
   }
@@ -34,7 +34,7 @@ layer {
     mean_file: "/art_classifier/input/mean.binaryproto"
   }
   data_param {
-    source: "/art_classifier/input/validation_leveldb"
+    source: "/art_classifier/input/validation_lmdb"
     batch_size: 50
     backend: LEVELDB
   }

@@ -3,5 +3,5 @@ pandas==0.21.0
 matplotlib==2.1.0
 numpy==1.13.3
 Pillow==4.3.0
-leveldb==0.194
+lmdb==0.93
 scikit-image==0.13.1

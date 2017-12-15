@@ -65,6 +65,7 @@ node_modules
 # Project specific
 src/data/
 src/input/*leveldb/
+src/input/*lmdb
 src/log/
 src/core
 *caffemodel
