@@ -42,7 +42,7 @@ You will need the following things properly installed on your computer.
     ```
 7. Model training
     ```bash
-    nvidia-docker exec art caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee log/model_1_train.log
+    nvidia-docker exec art caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt |& tee -a model_train.log
     ```
 8. Plotting the learning 
     ```bash
