@@ -124,7 +124,7 @@ def init_argparse():
         default=path.join(CWD, 'input', 'mean.binaryproto'),
         type=str)
     parser.add_argument(
-        '-p',
+        '-a',
         '--architecture',
         nargs='?',
         help='prototxt file path with mode architecture',

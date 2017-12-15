@@ -1889,9 +1889,8 @@ layer {
   }
 }
 layer {
-  name: "loss"
+  name: "prob"
   type: "Softmax"
   bottom: "fc8"
-  bottom: "label"
-  top: "loss/loss"
+  top: "prob"
 }
