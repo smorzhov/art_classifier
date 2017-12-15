@@ -2349,3 +2349,14 @@ layer {
 	name: "prob"
 	type: "Softmax"
 }
+
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "fc1000"
+  bottom: "label"
+  top: "accuracy"
+  include {
+    phase: TEST
+  }
+}
