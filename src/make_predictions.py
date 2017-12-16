@@ -15,7 +15,7 @@ from utils import CWD, DATA_PATH, get_logger, MODE, CAFFE_MODELS_PATH
 from utils import get_genre_labels, transform_img
 
 
-def get_model_data(mean_file, model_arc, model_weights):
+def get_model_data(mean_file, model_arc, model_weights, device=0):
     """
     Reading mean image, caffe model and its weights
     """
@@ -24,7 +24,7 @@ def get_model_data(mean_file, model_arc, model_weights):
 
     if MODE == 'gpu':
         caffe.set_mode_gpu()
-        caffe.set_device(args.device)
+        caffe.set_device(device)
     else:
         caffe.set_mode_cpu()
 
