@@ -68,8 +68,11 @@ src/input/*leveldb/
 src/input/*lmdb
 src/log/
 src/core
+src/model_train.log.test
+src/model_train.log.train
 *caffemodel
 *solverstate
 *.binaryproto
 *predictions.csv
 *submission_model_*.csv
+*.png

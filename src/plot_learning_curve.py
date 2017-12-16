@@ -22,8 +22,8 @@ def generate_logs(model_log_path, must_clear=True):
 
     def clear():
         """Removes generated files"""
-        # remove(train_log_path)
-        # remove(test_log_path)
+        remove(train_log_path)
+        remove(test_log_path)
 
     # Get directory where the model logs is saved, and move to it
     model_log_dir_path = path.dirname(model_log_path)
