@@ -25,12 +25,11 @@
         ]
     },
     {
-        "genre": "illustration",
+        "genre": "animal painting",
         "label": 3,
         "addition": [
-            "illustration",
-            "advertisement",
-            "poster"
+            "animal painting",
+            "wildlife painting"
         ]
     },
     {
@@ -40,9 +39,7 @@
             "landscape",
             "marina",
             "cloudscape",
-            "wildlife painting",
-            "shan shui",
-            "pastorale"
+            "shan shui"
         ]
     },
     {
