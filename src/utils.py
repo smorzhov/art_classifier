@@ -17,7 +17,7 @@ MODE = 'gpu'
 CWD = path.dirname(path.realpath(__file__))
 DATA_PATH = path.join(CWD, 'data')
 CAFFE_MODELS_PATH = path.join(CWD, 'caffe_models')
-CAFFE_PATH = '$CAFFE_ROOT'
+CAFFE_PATH = '/opt/caffe'
 
 
 def get_genre_labels(transofrm=False, file=path.join(CWD, 'labels.json')):

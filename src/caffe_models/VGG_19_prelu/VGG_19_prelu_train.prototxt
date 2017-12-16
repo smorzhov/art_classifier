@@ -20,7 +20,7 @@ layer {
   }
   data_param {
     source: "/art_classifier/input/train_lmdb"
-    batch_size: 128
+    batch_size: 64
     backend: LMDB
   }
 }
@@ -39,7 +39,7 @@ layer {
   }
   data_param {
     source: "/art_classifier/input/validation_lmdb"
-    batch_size: 32
+    batch_size: 16
     backend: LMDB
   }
 }
@@ -1814,8 +1814,8 @@ layer {
 }
 layer {
   bottom: "pool5"
-  top: "fc6"
-  name: "fc6"
+  top: "fc6-art"
+  name: "fc6-art"
   type: "InnerProduct"
   param {
     lr_mult: 1
@@ -1837,8 +1837,8 @@ layer {
   }
 }
 layer {
-  bottom: "fc6"
-  top: "fc6"
+  bottom: "fc6-art"
+  top: "fc6-art"
   name: "prelu6"
   type: "PReLU"
   param {
@@ -1849,8 +1849,8 @@ layer {
   }
 }
 layer {
-  bottom: "fc6"
-  top: "fc6"
+  bottom: "fc6-art"
+  top: "fc6-art"
   name: "drop6"
   type: "Dropout"
   dropout_param {
@@ -1858,7 +1858,7 @@ layer {
   }
 }
 layer {
-  bottom: "fc6"
+  bottom: "fc6-art"
   top: "fc7"
   name: "fc7"
   type: "InnerProduct"

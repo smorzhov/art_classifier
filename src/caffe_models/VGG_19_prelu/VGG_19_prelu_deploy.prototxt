@@ -1776,8 +1776,8 @@ layer {
 }
 layer {
   bottom: "pool5"
-  top: "fc6"
-  name: "fc6"
+  top: "fc6-art"
+  name: "fc6-art"
   type: "InnerProduct"
   param {
     lr_mult: 1
@@ -1799,8 +1799,8 @@ layer {
   }
 }
 layer {
-  bottom: "fc6"
-  top: "fc6"
+  bottom: "fc6-art"
+  top: "fc6-art"
   name: "prelu6"
   type: "PReLU"
   param {
@@ -1811,8 +1811,8 @@ layer {
   }
 }
 layer {
-  bottom: "fc6"
-  top: "fc6"
+  bottom: "fc6-art"
+  top: "fc6-art"
   name: "drop6"
   type: "Dropout"
   dropout_param {
@@ -1820,7 +1820,7 @@ layer {
   }
 }
 layer {
-  bottom: "fc6"
+  bottom: "fc6-art"
   top: "fc7"
   name: "fc7"
   type: "InnerProduct"
