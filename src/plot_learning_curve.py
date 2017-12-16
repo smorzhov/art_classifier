@@ -71,7 +71,7 @@ def make_learning_curves(learning_curve_path, train_log, test_log):
         ['Training Loss', 'Test Loss', 'Test Accuracy'],
         bbox_to_anchor=(1, 0.8))
     plt.title('Training Curve', fontsize=18)
-    #Saving learning curve
+    # Saving learning curve
     plt.savefig(learning_curve_path)
 
 

@@ -6,12 +6,18 @@ Usage: python make_predictions.py [-h]
 """
 
 import argparse
+import itertools
 from glob import glob
 from os import path
 import pandas as pd
 import numpy as np
 import caffe
 from caffe.proto import caffe_pb2
+import matplotlib
+# generates images without having a window appear
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 from utils import CWD, DATA_PATH, get_logger, MODE, CAFFE_MODELS_PATH
 from utils import get_genre_labels, transform_img
 
@@ -79,10 +85,45 @@ def make_submission_file(submission_model_path, test_ids, predictions):
     file.close()
 
 
+def plot_confusion_matrix(cm,
+                          classes,
+                          normalize=False,
+                          title='Confusion matrix',
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(
+            j,
+            i,
+            format(cm[i, j], fmt),
+            horizontalalignment="center",
+            color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+
+
 def analyze_predictions(submission_model_path, csv_result):
     """It analyze predictions and shows result"""
     all_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
     submission_model = pd.read_csv(submission_model_path)
+
     genre_label = get_genre_labels(True)
     null_genre = 0
     null_label = 0
@@ -106,6 +147,22 @@ def analyze_predictions(submission_model_path, csv_result):
 
     submission_model['exact_label'] = exact_labels
     submission_model.to_csv(csv_result, index=False)
+
+    labels = pd.read_csv(path.join(DATA_PATH, 'genre_labels.csv'))
+    # Compute confusion matrix
+    cnf_matrix = confusion_matrix(submission_model['exact_label'].values,
+                                  submission_model['label'].values)
+    np.set_printoptions(precision=2)
+    # Plot normalized confusion matrix
+    plt.figure()
+    plot_confusion_matrix(
+        cnf_matrix,
+        classes=labels['genre'].values,
+        normalize=True,
+        title='Normalized confusion matrix')
+    # Saving learning curve
+    plt.savefig(path.join(DATA_PATH, 'confusuin_matrix'))
+
     print('Genre is null: ' + str(null_genre))
     print('Label is null: ' + str(null_label))
     print('Errors: ' + str(errors) + ' (out of ' + str(len(submission_model)) +
@@ -190,25 +247,6 @@ def main():
     analyze_predictions(submission_model_path,
                         path.join(
                             path.dirname(args.weights), 'predictions.csv'))
-
-    # mean_blob = caffe_pb2.BlobProto()
-    # with open(args.mean) as file:
-    #     mean_blob.ParseFromString(file.read())
-    # net = caffe.Classifier(
-    #     args.architecture,
-    #     args.weights,
-    #     mean=mean_blob,
-    #     channel_swap=(2, 0, 1),
-    #     raw_scale=255,
-    #     image_dims=(256, 256))
-    # print("successfully loaded classifier")
-
-    # # test on a image
-    # input_image = transform_img('/data/test/0.jpg')
-    # # predict takes any number of images,
-    # # and formats them for the Caffe net automatically
-    # pred = net.predict([input_image])
-    # print(pred)
 
 
 if __name__ == '__main__':
