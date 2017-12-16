@@ -32,7 +32,7 @@ def get_genre_labels(transofrm=False, file=path.join(CWD, 'labels.json')):
         for label in labels:
             for genre in label['addition']:
                 genre_label[genre] = {
-                    'label': label['label'],
+                    'label': int(label['label']),
                     'genre': label['genre']
                 }
         return genre_label

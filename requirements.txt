@@ -5,3 +5,5 @@ numpy==1.13.3
 Pillow==4.3.0
 lmdb==0.93
 scikit-image==0.13.1
+sklearn=0.0
+progressbar=2.3

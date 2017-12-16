@@ -6,18 +6,11 @@ Usage: python make_predictions.py [-h]
 """
 
 import argparse
-import itertools
 from glob import glob
 from os import path
 import pandas as pd
 import numpy as np
-import caffe
-from caffe.proto import caffe_pb2
-import matplotlib
-# generates images without having a window appear
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+import progressbar
 from utils import CWD, DATA_PATH, get_logger, MODE, CAFFE_MODELS_PATH
 from utils import get_genre_labels, transform_img
 
@@ -26,6 +19,15 @@ def get_model_data(mean_file, model_arc, model_weights):
     """
     Reading mean image, caffe model and its weights
     """
+    import caffe
+    from caffe.proto import caffe_pb2
+
+    if MODE == 'gpu':
+        caffe.set_mode_gpu()
+        caffe.set_device(args.device)
+    else:
+        caffe.set_mode_cpu()
+
     # Read mean image
     mean_blob = caffe_pb2.BlobProto()
     with open(mean_file) as file:
@@ -85,38 +87,64 @@ def make_submission_file(submission_model_path, test_ids, predictions):
     file.close()
 
 
-def plot_confusion_matrix(cm,
-                          classes,
-                          normalize=False,
-                          title='Confusion matrix',
-                          cmap=plt.cm.Blues):
-    """
-    This function prints and plots the confusion matrix.
-    Normalization can be applied by setting `normalize=True`.
-    """
-    if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+def plot_confusion_matrix(predictions_path):
+    """Plots submission matrix"""
+    import itertools
+    import matplotlib
+    # generates images without having a window appear
+    matplotlib.use('Agg')
+    import matplotlib.pylab as plt
+    from sklearn.metrics import confusion_matrix
 
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    submission_model = pd.read_csv(predictions_path)
 
-    fmt = '.2f' if normalize else 'd'
-    thresh = cm.max() / 2.
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(
-            j,
-            i,
-            format(cm[i, j], fmt),
-            horizontalalignment="center",
-            color="white" if cm[i, j] > thresh else "black")
+    def plot(cm,
+             classes,
+             normalize=False,
+             title='Confusion matrix',
+             cmap=plt.cm.Blues):
+        """
+        This function prints and plots the confusion matrix.
+        Normalization can be applied by setting `normalize=True`.
+        """
+        if normalize:
+            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
+        plt.imshow(cm, interpolation='nearest', cmap=cmap)
+        plt.title(title)
+        plt.colorbar()
+        tick_marks = np.arange(len(classes))
+        plt.xticks(tick_marks, classes, rotation=45)
+        plt.yticks(tick_marks, classes)
+
+        fmt = '.2f' if normalize else 'd'
+        thresh = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            plt.text(
+                j,
+                i,
+                format(cm[i, j], fmt),
+                horizontalalignment="center",
+                color="white" if cm[i, j] > thresh else "black")
+
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+
+    labels = pd.read_csv(path.join(DATA_PATH, 'genre_labels.csv'))
+    # Compute confusion matrix
+    cnf_matrix = confusion_matrix(submission_model['exact_label'].values,
+                                  submission_model['label'].values)
+    np.set_printoptions(precision=2)
+    # Plot normalized confusion matrix
+    plt.figure()
+    plot(
+        cnf_matrix,
+        classes=labels['genre'].values,
+        normalize=True,
+        title='Normalized confusion matrix')
+    # Saving learning curve
+    plt.savefig(path.join(path.dirname(predictions_path), 'confusuin_matrix'))
 
 
 def analyze_predictions(submission_model_path, csv_result):
@@ -129,39 +157,34 @@ def analyze_predictions(submission_model_path, csv_result):
     null_label = 0
     exact_labels = []
     errors = 0
-    for _, row in submission_model.iterrows():
+    progress = progressbar.ProgressBar(
+        maxval=len(submission_model),
+        widgets=[progressbar.Bar('=', '[', ']'), ' ',
+                 progressbar.Percentage()])
+    progress.start()
+    for i, row in submission_model.iterrows():
+        progress.update(i + 1)
         genre = all_data_info[all_data_info['new_filename'] == row['img']][
             'genre'].dropna()
         # some paintings don't have a genre. Checking it
         if len(genre) < 1:
             null_genre += 1
-            exact_labels.append(None)
+            exact_labels.append(row['label'])
             continue
         if genre.values[0] not in genre_label:
             # No label. It's strange, but let's go on...
             null_label += 1
+            exact_labels.append(row['label'])
             continue
         exact_labels.append(int(genre_label[genre.values[0]]['label']))
         if row['label'] != exact_labels[-1]:
             errors += 1
+    progress.finish()
 
     submission_model['exact_label'] = exact_labels
     submission_model.to_csv(csv_result, index=False)
 
-    labels = pd.read_csv(path.join(DATA_PATH, 'genre_labels.csv'))
-    # Compute confusion matrix
-    cnf_matrix = confusion_matrix(submission_model['exact_label'].values,
-                                  submission_model['label'].values)
-    np.set_printoptions(precision=2)
-    # Plot normalized confusion matrix
-    plt.figure()
-    plot_confusion_matrix(
-        cnf_matrix,
-        classes=labels['genre'].values,
-        normalize=True,
-        title='Normalized confusion matrix')
-    # Saving learning curve
-    plt.savefig(path.join(DATA_PATH, 'confusuin_matrix'))
+    # plot_confusion_matrix(submission_model)
 
     print('Genre is null: ' + str(null_genre))
     print('Label is null: ' + str(null_label))
@@ -231,12 +254,6 @@ def main():
     parser = init_argparse()
     args = parser.parse_args()
 
-    if MODE == 'gpu':
-        caffe.set_mode_gpu()
-        caffe.set_device(args.device)
-    else:
-        caffe.set_mode_cpu()
-
     net, transformer = get_model_data(args.mean, args.architecture,
                                       args.weights)
     test_ids, predictions = predict(net, transformer, args.file)
@@ -244,9 +261,10 @@ def main():
         print(test_ids[0], label_to_class_name(predictions[0]))
         return
     make_submission_file(submission_model_path, test_ids, predictions)
-    analyze_predictions(submission_model_path,
-                        path.join(
-                            path.dirname(args.weights), 'predictions.csv'))
+    print('Analizing predictions')
+    predictions_path = path.join(path.dirname(args.weights), 'predictions.csv')
+    analyze_predictions(submission_model_path, predictions_path)
+    plot_confusion_matrix(predictions_path)
 
 
 if __name__ == '__main__':

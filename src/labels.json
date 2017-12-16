@@ -8,17 +8,8 @@
         ]
     },
     {
-        "genre": "cityscape",
-        "label": 1,
-        "addition": [
-            "cityscape",
-            "capriccio",
-            "veduta"
-        ]
-    },
-    {
         "genre": "genre painting",
-        "label": 2,
+        "label": 1,
         "addition": [
             "genre painting",
             "yakusha-e"
@@ -26,41 +17,38 @@
     },
     {
         "genre": "animal painting",
-        "label": 3,
+        "label": 2,
         "addition": [
-            "animal painting",
-            "wildlife painting"
+            "animal painting"
         ]
     },
     {
         "genre": "landscape",
-        "label": 4,
+        "label": 3,
         "addition": [
+            "cityscape",
+            "capriccio",
+            "veduta",
             "landscape",
             "marina",
             "cloudscape",
-            "shan shui"
-        ]
-    },
-    {
-        "genre": "nude painting",
-        "label": 5,
-        "addition": [
-            "nude painting (nu)"
+            "shan shui",
+            "wildlife painting"
         ]
     },
     {
         "genre": "portrait",
-        "label": 6,
+        "label": 4,
         "addition": [
             "portrait",
             "self-portrait",
-            "bijinga"
+            "bijinga",
+            "nude painting (nu)"
         ]
     },
     {
         "genre": "history painting",
-        "label": 7,
+        "label": 5,
         "addition": [
             "religious painting",
             "mythological painting",
@@ -72,20 +60,12 @@
         ]
     },
     {
-        "genre": "sketch and study",
-        "label": 8,
-        "addition": [
-            "sketch and study"
-        ]
-    },
-    {
         "genre": "still life",
-        "label": 9,
+        "label": 6,
         "addition": [
             "still life",
             "flower painting",
-            "vanitas",
-            "bird-and-flower painting"
+            "vanitas"
         ]
     }
 ]
