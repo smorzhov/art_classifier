@@ -2339,7 +2339,7 @@ layer {
 	name: "fc1000"
 	type: "InnerProduct"
 	inner_product_param {
-		num_output: 7
+		num_output: 6
 	}
 }
 

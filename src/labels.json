@@ -15,15 +15,8 @@
         ]
     },
     {
-        "genre": "animal painting",
-        "label": 2,
-        "addition": [
-            "animal painting"
-        ]
-    },
-    {
         "genre": "landscape",
-        "label": 3,
+        "label": 2,
         "addition": [
             "cityscape",
             "capriccio",
@@ -32,12 +25,13 @@
             "marina",
             "cloudscape",
             "shan shui",
-            "wildlife painting"
+            "wildlife painting",
+            "pastorale"
         ]
     },
     {
         "genre": "portrait",
-        "label": 4,
+        "label": 3,
         "addition": [
             "portrait",
             "self-portrait",
@@ -47,7 +41,7 @@
     },
     {
         "genre": "history painting",
-        "label": 5,
+        "label": 4,
         "addition": [
             "religious painting",
             "mythological painting",
@@ -60,10 +54,10 @@
     },
     {
         "genre": "still life",
-        "label": 6,
+        "label": 5,
         "addition": [
             "still life",
-            "vanitas"
+            "flower painting"
         ]
     }
 ]

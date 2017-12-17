@@ -7,7 +7,7 @@ Usage: python make_predictions.py [-h]
 
 import argparse
 from glob import glob
-from os import path
+from os import path, system
 import pandas as pd
 import numpy as np
 import progressbar
@@ -87,66 +87,6 @@ def make_submission_file(submission_model_path, test_ids, predictions):
     file.close()
 
 
-def plot_confusion_matrix(predictions_path):
-    """Plots submission matrix"""
-    import itertools
-    import matplotlib
-    # generates images without having a window appear
-    matplotlib.use('Agg', warn=False, force=True)
-    import matplotlib.pylab as plt
-    from sklearn.metrics import confusion_matrix
-
-    submission_model = pd.read_csv(predictions_path)
-
-    def plot(cm,
-             classes,
-             normalize=False,
-             title='Confusion matrix',
-             cmap=plt.cm.Blues):
-        """
-        This function prints and plots the confusion matrix.
-        Normalization can be applied by setting `normalize=True`.
-        """
-        if normalize:
-            cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-
-        plt.imshow(cm, interpolation='nearest', cmap=cmap)
-        plt.title(title)
-        plt.colorbar()
-        tick_marks = np.arange(len(classes))
-        plt.xticks(tick_marks, classes, rotation=45)
-        plt.yticks(tick_marks, classes)
-
-        fmt = '.2f' if normalize else 'd'
-        thresh = cm.max() / 2.
-        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-            plt.text(
-                j,
-                i,
-                format(cm[i, j], fmt),
-                horizontalalignment="center",
-                color="white" if cm[i, j] > thresh else "black")
-
-        plt.tight_layout()
-        plt.ylabel('True label')
-        plt.xlabel('Predicted label')
-
-    labels = pd.read_csv(path.join(DATA_PATH, 'genre_labels.csv'))
-    # Compute confusion matrix
-    cnf_matrix = confusion_matrix(submission_model['exact_label'].values,
-                                  submission_model['label'].values)
-    np.set_printoptions(precision=2)
-    # Plot normalized confusion matrix
-    plt.figure()
-    plot(
-        cnf_matrix,
-        classes=labels['genre'].values,
-        normalize=True,
-        title='Normalized confusion matrix')
-    # Saving learning curve
-    plt.savefig(path.join(path.dirname(predictions_path), 'confusuin_matrix'))
-
-
 def analyze_predictions(submission_model_path, csv_result):
     """It analyze predictions and shows result"""
     all_data_info = pd.read_csv(path.join(DATA_PATH, 'all_data_info.csv'))
@@ -190,7 +130,7 @@ def analyze_predictions(submission_model_path, csv_result):
     print('Label is null: ' + str(null_label))
     print('Errors: ' + str(errors) + ' (out of ' + str(len(submission_model)) +
           ')')
-    print('Accuracy: ' + str(errors / float(len(submission_model))))
+    print('Accuracy: ' + str(1 - (errors / float(len(submission_model)))))
 
 
 def init_argparse():
@@ -261,10 +201,10 @@ def main():
         print(test_ids[0], label_to_class_name(predictions[0]))
         return
     make_submission_file(submission_model_path, test_ids, predictions)
-    print('Analizing predictions')
     predictions_path = path.join(path.dirname(args.weights), 'predictions.csv')
+    print('Analizing predictions')
     analyze_predictions(submission_model_path, predictions_path)
-    plot_confusion_matrix(predictions_path)
+    system('python plot_confusion_matrix.py ' + predictions_path)
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ Usage: python create_lmdb.py
 """
 
 from random import shuffle, random
-from os import path
+from os import path, system
 from shutil import rmtree
 from glob import glob
 import pandas as pd
@@ -17,7 +17,7 @@ from utils import IMAGE_WIDTH, IMAGE_HEIGHT, CWD, DATA_PATH
 from utils import get_logger, augment_img, try_makedirs, get_genre_labels
 
 # approximate number of images per class
-IMAGES_PER_CLASS = 30000
+IMAGES_PER_CLASS = 0
 
 
 def make_datum(image, label):
@@ -43,8 +43,21 @@ def get_percentage(curr, total):
     return '[ ' + str(percentage) + '% ] '
 
 
-def generate_images(image_path, number_of_imgs):
-    """Generates some images"""
+def generate_images(image_path, number_of_imgs, **kwargs):
+    """
+    Generates some images
+
+    rnd=0.5 - augment some images with probability 0.5
+    """
+    amount = 0
+    if 'rnd' in kwargs:
+        if random() > 1 - kwargs['rnd']:
+            if 'amount' in kwargs:
+                amount = kwargs['amount']
+            else:
+                amount += 1
+        return augment_img(image_path, 1 + amount)
+
     amount = IMAGES_PER_CLASS / float(number_of_imgs)
     if amount <= 1:
         return augment_img(image_path, 1)
@@ -136,6 +149,9 @@ def main():
     logger.info('Genre is null: ' + str(null_genre))
     logger.info('Label is null: ' + str(null_label))
     logger.info('Finished processing all images')
+    logger.info('Computing image mean')
+    system('compute_image_mean -backend=lmdb ' + train_db_path + ' ' +
+           path.join(db_data_path, 'mean.binaryproto'))
 
 
 if __name__ == '__main__':

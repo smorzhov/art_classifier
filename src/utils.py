@@ -59,7 +59,7 @@ def transform_img(image_path, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
 def augment_img(image_path, amount, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
     """Returns an array of `amount` generated images"""
     if amount <= 1:
-        return [transform(open_img(image_path), width, height)]
+        return [transform_img(image_path, width, height)]
     img = np.array(open_img(image_path))
     # The array has shape (amount, width, height, 3)
     # and dtype uint8.
@@ -98,7 +98,10 @@ def augment_img(image_path, amount, width=IMAGE_WIDTH, height=IMAGE_HEIGHT):
         random_order=True)  # apply augmenters in random order
 
     images_aug = seq.augment_images(images)
-    return [transform(fromarray(img), width, height) for img in images_aug]
+    res = [transform_img(image_path, width, height)]
+    for img in images_aug:
+        res.append(transform(fromarray(img), width, height))
+    return res
 
 
 def try_makedirs(name):
