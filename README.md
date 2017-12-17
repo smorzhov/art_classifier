@@ -40,9 +40,13 @@ You will need the following things properly installed on your computer.
     ```bash
     nvidia-docker exec art compute_image_mean -backend=lmdb input/train_lmdb input/mean.binaryproto
     ```
-7. Model training
+7. Model training for caffenet
     ```bash
     nvidia-docker exec art caffe train --solver caffe_models/caffe_model_1/solver_1.prototxt 2>&1 | tee model_train.log
+    ```
+    for VGG_19_prelu
+    ```bash
+    nvidia-docker exec art caffe train --solver caffe_models/VGG_19_prelu/VGG_19_prelu_solver.prototxt --gpu=all 2>&1 | tee model_train.log
     ```
 8. Plotting the learning 
     ```bash
@@ -52,6 +56,10 @@ You will need the following things properly installed on your computer.
 
     ```bash
     nvidia-docker exec art python make_predictions.py [-h]
+    ```
+    for VGG_19_prelu
+    ```bash
+    nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_20000.caffemodel
     ```
 
 Optionally you can print the model architecture by executing the command below. The model architecture image will be stored under `~/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png` 
