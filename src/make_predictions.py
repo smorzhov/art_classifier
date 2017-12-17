@@ -92,7 +92,7 @@ def plot_confusion_matrix(predictions_path):
     import itertools
     import matplotlib
     # generates images without having a window appear
-    matplotlib.use('Agg')
+    matplotlib.use('Agg', warn=False, force=True)
     import matplotlib.pylab as plt
     from sklearn.metrics import confusion_matrix
 
