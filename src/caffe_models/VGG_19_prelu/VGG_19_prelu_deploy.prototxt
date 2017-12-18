@@ -23,7 +23,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -130,7 +130,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -248,7 +248,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -355,7 +355,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -473,7 +473,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -580,7 +580,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -687,7 +687,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -794,7 +794,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -912,7 +912,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1019,7 +1019,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1126,7 +1126,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1233,7 +1233,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1351,7 +1351,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1458,7 +1458,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1566,7 +1566,7 @@ layer {
     kernel_size: 3
     stride: 2
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1673,7 +1673,7 @@ layer {
     pad: 1
     kernel_size: 3
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1776,8 +1776,8 @@ layer {
 }
 layer {
   bottom: "pool5"
-  top: "fc6-art"
-  name: "fc6-art"
+  top: "fc6"
+  name: "fc6"
   type: "InnerProduct"
   param {
     lr_mult: 1
@@ -1790,7 +1790,7 @@ layer {
   inner_product_param {
     num_output: 4096
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1799,8 +1799,8 @@ layer {
   }
 }
 layer {
-  bottom: "fc6-art"
-  top: "fc6-art"
+  bottom: "fc6"
+  top: "fc6"
   name: "prelu6"
   type: "PReLU"
   param {
@@ -1811,8 +1811,8 @@ layer {
   }
 }
 layer {
-  bottom: "fc6-art"
-  top: "fc6-art"
+  bottom: "fc6"
+  top: "fc6"
   name: "drop6"
   type: "Dropout"
   dropout_param {
@@ -1820,7 +1820,7 @@ layer {
   }
 }
 layer {
-  bottom: "fc6-art"
+  bottom: "fc6"
   top: "fc7"
   name: "fc7"
   type: "InnerProduct"
@@ -1835,7 +1835,7 @@ layer {
   inner_product_param {
     num_output: 4096
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
     bias_filler {
       type: "constant"
@@ -1865,9 +1865,9 @@ layer {
   }
 }
 layer {
-  name: "fc8-art"
+  name: "fc8"
   bottom: "fc7"
-  top: "fc8-art"
+  top: "fc8"
   type: "InnerProduct"
    param {
      lr_mult: 1
@@ -1880,7 +1880,7 @@ layer {
   inner_product_param {
     num_output: 6
     weight_filler {
-      type: "msra"
+      type: "xavier"
     }
      bias_filler {
       type: "constant"
@@ -1891,6 +1891,6 @@ layer {
 layer {
   name: "prob"
   type: "Softmax"
-  bottom: "fc8-art"
+  bottom: "fc8"
   top: "prob"
 }
