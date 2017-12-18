@@ -48,6 +48,10 @@ You will need the following things properly installed on your computer.
     ```bash
     nvidia-docker exec art caffe train --solver caffe_models/VGG_19_prelu/VGG_19_prelu_solver.prototxt --gpu=all 2>&1 | tee model_train.log
     ```
+    for ResNet_50
+    ```bash
+    nvidia-docker exec art caffe train --solver caffe_models/ResNet_50/ResNet_50_solver.prototxt --gpu=all 2>&1 | tee model_train.log
+    ```
 8. Plotting the learning 
     ```bash
     nvidia-docker exec art python plot_learning_curve.py model_train.log model_1_learning_curve.png
@@ -60,6 +64,10 @@ You will need the following things properly installed on your computer.
     for VGG_19_prelu
     ```bash
     nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_20000.caffemodel
+    ```
+    for ResNet_50
+    ```bash
+    nvidia-docker exec art python make_predictions.py -a caffe_models/ResNet_50/ResNet_50_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/ResNet_50/ResNet_50_iter_20000.caffemodel
     ```
 
 Optionally you can print the model architecture by executing the command below. The model architecture image will be stored under `~/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png` 

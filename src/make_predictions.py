@@ -164,7 +164,7 @@ def init_argparse():
         nargs='?',
         help='weight file path',
         default=path.join(CAFFE_MODELS_PATH, 'caffe_model_1',
-                          'caffe_model_1_iter_40000.caffemodel'),
+                          'caffe_model_1_iter_20000.caffemodel'),
         type=str)
     parser.add_argument(
         '-f',

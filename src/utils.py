@@ -5,7 +5,7 @@ import logging
 import json
 from os import path, makedirs
 import numpy as np
-from PIL.Image import open as open_img, fromarray, LANCZOS
+from PIL.Image import open as open_img, fromarray, LANCZOS, NEAREST
 from PIL.ImageOps import equalize
 from imgaug import augmenters as iaa
 
@@ -112,5 +112,6 @@ def try_makedirs(name):
 
 def transform(image, width, height):
     """Returns resized and eqialized copy of the image"""
-    img = image.resize((width, height), LANCZOS)
+    # img = image.resize((width, height), LANCZOS)
+    img = image.resize((width, height), NEAREST)
     return equalize(img)

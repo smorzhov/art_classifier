@@ -33,7 +33,7 @@ layer {
   }
   data_param {
     source: "/art_classifier/input/validation_lmdb"
-    batch_size: 32
+    batch_size: 50
     backend: LMDB
   }
 }
@@ -2344,13 +2344,6 @@ layer {
 }
 
 layer {
-	bottom: "fc1000"
-	top: "prob"
-	name: "prob"
-	type: "Softmax"
-}
-
-layer {
   name: "accuracy"
   type: "Accuracy"
   bottom: "fc1000"
@@ -2360,3 +2353,11 @@ layer {
     phase: TEST
   }
 }
+
+layer {
+	bottom: "fc1000"
+	top: "prob"
+	name: "prob"
+	type: "Softmax"
+}
+
