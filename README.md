@@ -63,7 +63,7 @@ You will need the following things properly installed on your computer.
     ```
     for VGG_19_prelu
     ```bash
-    nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_40000.caffemodel
+    nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_80000.caffemodel
     ```
     for ResNet_50
     ```bash
