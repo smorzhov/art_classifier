@@ -54,7 +54,7 @@ You will need the following things properly installed on your computer.
     ```
 8. Plotting the learning 
     ```bash
-    nvidia-docker exec art python plot_learning_curve.py model_train.log model_1_learning_curve.png
+    nvidia-docker exec art python plot_learning_curve.py /art_classifier/model_train.log /art_classifier/model_1_learning_curve.png
     ```
 9. Prediction on new data
 
@@ -63,7 +63,7 @@ You will need the following things properly installed on your computer.
     ```
     for VGG_19_prelu
     ```bash
-    nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_20000.caffemodel
+    nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_40000.caffemodel
     ```
     for ResNet_50
     ```bash
