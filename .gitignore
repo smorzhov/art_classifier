@@ -76,3 +76,4 @@ src/model_train.log.train
 *predictions.csv
 *submission_model_*.csv
 *.png
+!imgs/*
