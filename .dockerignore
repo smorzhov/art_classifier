@@ -2,6 +2,7 @@
 *.gitignore
 *.vscode
 
+*imgs
 *src/data
 *src/input
 *src/log

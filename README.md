@@ -1,5 +1,37 @@
 # Art classifier
 
+## Description
+
+It classifies paintings into 6 genres:
+* abstract
+* genre painting
+* landscape
+* portrait
+* history painting
+* still life.
+
+Train and test data was taken from [Painter by number](https://www.kaggle.com/c/painter-by-numbers) Kaggle competition.
+
+First of all, it is worth noting that original data set contains 42 genres. Some of them includes very few paintings (less than 20) and some of them, such as portrait, has more than 10000. That is why I decided to merge some genres into one. For example, I consider self-portrait is just a portrait; cityscape, cloudscape or marina is just a landscape. In addition, I decided not to consider some genres. Original data contains "sketch and study" genre, which can include both sketches of portraits, landscapes, religious paintings and still lifes. For more details about merged and discarded genres, please, see [labels.json](/src/labels.json). That is why, data preprocessing stage becomes a little bit tricky.
+
+I do not have enough time for the fine tuning of the convolutional neural network (CNN) used while training. That is why, my result, I suppose, is not perfect, despite even the fact that the training data may have been labeled badly or the problem to determine painting genres is difficult.
+
+I suppose VGG_19_prelu CNN model (was take from the [VGG_19_layers_Network](https://github.com/n3011/VGG_19_layers_Network)) being quite promising and it may be tuned much better.
+
+I got approximately 70% accuracy during the testing phase. The learning curve and the confusion matrix are as follows:
+
+![Training curve](/imgs/vgg19_learning_curve.png)
+
+Obviously, the learning curve is unstable in the tail and hence, CNN parameters must be carefully tuned to solve this issue.
+
+![Confusion matrix](/imgs/confusion_matrix.png)
+
+For training VGG_19_prelu model I used a cluster of 8 NVIDIA Tesla V100 SMX2 GPUs. Approximately 12 Gb of video memory were used on each GPU. The training process took about 6 hours.
+
+Caffe_model_1 has not so complex architecture as VGG_19_prelu and may be trained on one GPU in several hours' time. Using this simpler model, I cannot get above 60% accuracy.
+
+If you were interested in this problem and you improved my result, please inform me about it. Feel free to communicate with me via [email](mailto:smorzhov@gmail.com) or [LinkedIn](https://www.linkedin.com/in/smorzhov/).
+
 ## Prerequisites
 
 You will need the following things properly installed on your computer.
@@ -48,11 +80,7 @@ You will need the following things properly installed on your computer.
     ```bash
     nvidia-docker exec art caffe train --solver caffe_models/VGG_19_prelu/VGG_19_prelu_solver.prototxt --gpu=all 2>&1 | tee model_train.log
     ```
-    for ResNet_50
-    ```bash
-    nvidia-docker exec art caffe train --solver caffe_models/ResNet_50/ResNet_50_solver.prototxt --gpu=all 2>&1 | tee model_train.log
-    ```
-8. Plotting the learning 
+8. Plotting the learning (firstly, you need to copy model_train.log into `./src` directory)
     ```bash
     nvidia-docker exec art python plot_learning_curve.py /art_classifier/model_train.log /art_classifier/model_1_learning_curve.png
     ```
@@ -65,12 +93,12 @@ You will need the following things properly installed on your computer.
     ```bash
     nvidia-docker exec art python make_predictions.py -a caffe_models/VGG_19_prelu/VGG_19_prelu_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/VGG_19_prelu/VGG_19_prelu_iter_80000.caffemodel
     ```
-    for ResNet_50
-    ```bash
-    nvidia-docker exec art python make_predictions.py -a caffe_models/ResNet_50/ResNet_50_deploy.prototxt -w caffe_models/VGG_19_prelu/ -w caffe_models/ResNet_50/ResNet_50_iter_20000.caffemodel
-    ```
 
 Optionally you can print the model architecture by executing the command below. The model architecture image will be stored under `~/art_classifier/caffe_models/caffe_model_1/caffe_model_1.png` 
 ```bash
 nvidia-docker exec art python /opt/caffe/python/draw_net.py /art_classifier/caffe_models/caffe_model_1/caffenet_train_val_1.prototxt /art_classifier/caffe_models/caffe_model_1/caffe_model_1.png
 ``` 
+
+## Acknowledgments
+
+I would like to thank [Leonid Ivanovsky](https://www.linkedin.com/in/leonid-ivanovsky-2b64ba127/) and [Yaroslavl State University](http://uniyar.ac.ru/) for their help and provision of the infrastructure.

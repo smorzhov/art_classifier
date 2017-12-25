@@ -1,3 +1,5 @@
+# Permission may be needed to pull this image
+# Instead, you can use the original Caffe image, or the original Nvidia Caffe image
 FROM  nvcr.io/nvidia/caffe:17.10
 
 # Copy the file into docker
