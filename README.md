@@ -37,6 +37,8 @@ If you were interested in this problem and you improved my result, please inform
 You will need the following things properly installed on your computer.
 
 * [Python](https://www.python.org/)
+* [Docker](https://docs.docker.com/engine/installation/linux/ubuntulinux/) (v17 or higher)
+* [Nvidia-Docker](https://github.com/NVIDIA/nvidia-docker)
 
 ## Installation
 
